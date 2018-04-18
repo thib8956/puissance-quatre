@@ -15,7 +15,7 @@ public class Grille {
 			for(int j=0;j<Constantes.NB_LIGNES;j++)
 			{
 				grille[i][j] = Case.V;
-			}		
+			}	
 	}
 	
 	/**
@@ -24,7 +24,10 @@ public class Grille {
 	 */
 	private Grille(Grille original)
 	{
-		//À compléter
+		this.grille = new Case[original.grille.length][];
+		for(int i = 0; i < grille.length; i++) {
+			grille[i] = original.grille[i].clone();
+		}
 	}
 	
 	/**
@@ -37,6 +40,8 @@ public class Grille {
 	{
 		return grille[colonne][ligne];
 	}
+	
+
 
 	/**
 	 * Indique s'il y a encore de la place dans la colonne indiquée
@@ -173,8 +178,41 @@ public class Grille {
 	 */
 	public double evaluer(Case symboleJoueurCourant)
 	{
-		//À compléter
-		return 0; 
+		double eval =0;
+		
+		for(int i = 0; i<6; i++) {
+			eval +=evalLigne(symboleJoueurCourant,i);
+		}
+		for(int i = 0; i<7; i++) {
+			eval += evalColonne(symboleJoueurCourant,i);
+		}
+		return eval; 
+	}
+	
+	public double evalLigne(Case symb, int ligne) {
+		double cpt = 0;
+		for(int i = 0; i<7;i++) {
+			if(getCase(ligne,i).equals(symb)) {
+				cpt += 100;
+			}
+			else {
+				cpt = 0;
+			}
+		}
+		return cpt;
+	}
+	
+	public double evalColonne(Case symb, int colonne) {
+		double cpt = 0;
+		for(int i = 0; i<6;i++) {
+			if(getCase(i,colonne).equals(symb)) {
+				cpt += 100;
+			}
+			else {
+				cpt = 0;
+			}
+		}
+		return cpt;
 	}
 	
 	/**

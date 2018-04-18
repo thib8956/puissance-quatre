@@ -1,7 +1,9 @@
 package fr.uha.ensisa.puissance4.jeu.algosIA;
 
+import fr.uha.ensisa.puissance4.data.ArbreDeJeu;
 import fr.uha.ensisa.puissance4.data.Grille;
 import fr.uha.ensisa.puissance4.data.Joueur;
+import fr.uha.ensisa.puissance4.data.Noeud;
 import fr.uha.ensisa.puissance4.util.Constantes;
 import fr.uha.ensisa.puissance4.util.Constantes.Case;
 
@@ -11,6 +13,7 @@ public abstract class Algorithm {
 	protected Grille grilleDepart;
 	protected int tourDepart;
 	protected int tourMax;
+	protected ArbreDeJeu arbre;
 	/**
 	 * Symbole adversaire
 	 */
@@ -43,6 +46,7 @@ public abstract class Algorithm {
 			symboleMax=Constantes.SYMBOLE_J2;
 			symboleMin=Constantes.SYMBOLE_J1;
 		}
+		arbre = new ArbreDeJeu(new Noeud(grilleDepart));
 	}
 
 	/**
@@ -50,6 +54,8 @@ public abstract class Algorithm {
 	 * @return le coup choisi pour la grille indiqué lors de l'instantiation de l'algo
 	 */
 	public abstract int choisirCoup();
+	
+
 	
 	
 
