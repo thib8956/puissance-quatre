@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import fr.uha.ensisa.puissance4.data.Partie;
+import fr.uha.ensisa.puissance4.view.PlayersViewController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,6 +23,7 @@ public class Main extends Application {
 
 	private Stage primaryStage;
 	private BorderPane rootLayout;
+	private Partie partie;
 
 	public Main() {
 	}
@@ -66,6 +69,25 @@ public class Main extends Application {
 			rootLayout.setCenter(testOverView);
 
 			//Ajout du controller
+			PlayersViewController controller = loader.getController();
+			controller.setMainApp(this);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void showPartie() {
+		try {
+			// On charge la vue des joueurs
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getClassLoader().getResource("fr/uha/ensisa/puissance4/view/PartieLayout.fxml"));
+
+
+			BorderPane testOverView = (BorderPane) loader.load();
+			// Ajout de la fenêtre de joueur dans la scene principale
+			rootLayout.setCenter(testOverView);
+
+			//Ajout du controller
 		/*	FirstViewController controller = loader.getController();
 			controller.setMainApp(this);*/
 		} catch (IOException e) {
@@ -85,6 +107,10 @@ public class Main extends Application {
 
 		launch(args);
 
+	}
+	
+	public void setPartie(Partie partie) {
+		this.partie = partie;
 	}
 
 

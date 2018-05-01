@@ -224,6 +224,8 @@ public class PlayersViewController {
 		System.out.println("J2 : "+J2.getNom());
 		
 		partie = new Partie(J1,J2);
+		main.setPartie(partie);
+		main.showPartie();
 
 	}
 
