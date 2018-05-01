@@ -41,7 +41,7 @@ public class Minimax extends Algorithm {
 		double scoreMin = Constantes.SCORE_MIN_NON_DEFINI;
 		// Si la grille actuelle correspond à une feuille de l'arbre de jeu, on retourne son évaluation.
 		if (profondeur == levelIA || verifierPartieTerminee(grilleCourante, symboleMin, tour)) {
-			return grilleCourante.evaluer(symboleMax);
+			return grilleCourante.evaluer(symboleMin);
 		}
 
 		for (int i=0; i < Constantes.NB_COLONNES; i++) {
