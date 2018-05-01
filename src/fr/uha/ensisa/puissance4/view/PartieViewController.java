@@ -37,6 +37,9 @@ public class PartieViewController {
 
 	@FXML
 	private Label message;
+	
+	@FXML
+	private Button accueil;
 
 	@FXML
 	private Button but1;
@@ -81,6 +84,7 @@ public class PartieViewController {
 		for(Node it : grid.getChildren()) {
 			if(it instanceof Circle) listCircle.add((Circle) it);
 		}
+		accueil.setVisible(false);
 
 	}
 
@@ -88,52 +92,59 @@ public class PartieViewController {
 	private void but1() {
 		main.getPartie().jouerCoup(0, 0);
 		this.afficherGrille();
-		joueurSuivant();
 		affichageInfo();
+		joueurSuivant();
+
 	}
 	@FXML
 	private void but2() {
 		main.getPartie().jouerCoup(1, 0);
 		this.afficherGrille();
-		joueurSuivant();
 		affichageInfo();
+		joueurSuivant();
+
 	}
 	@FXML
 	private void but3() {
 		main.getPartie().jouerCoup(2, 0);
 		this.afficherGrille();
-		joueurSuivant();
 		affichageInfo();
+		joueurSuivant();
 	}
 	@FXML
 	private void but4() {
 		main.getPartie().jouerCoup(3, 0);
 		this.afficherGrille();
-		joueurSuivant();
 		affichageInfo();
+		joueurSuivant();
 	}
 	@FXML
 	private void but5() {
 		main.getPartie().jouerCoup(4, 0);
 		this.afficherGrille();
-		joueurSuivant();
 		affichageInfo();
+		joueurSuivant();
 	}
 	@FXML
 	private void but6() {
 		main.getPartie().jouerCoup(5, 0);
 		this.afficherGrille();
-		joueurSuivant();
 		affichageInfo();
+		joueurSuivant();
 	}
 	@FXML
 	private void but7() {
 		main.getPartie().jouerCoup(6, 0);
 		this.afficherGrille();
-		joueurSuivant();
 		affichageInfo();
-		
+		joueurSuivant();		
 	}
+	
+	@FXML
+	private void retourAccueil() {
+		main.showPlayers();	
+	}
+	
 
 
 	/**
@@ -169,9 +180,25 @@ public class PartieViewController {
 		if(main.getPartie().isPartieFinie()) {
 			if(main.getPartie().getEtatPartie() == Constantes.MATCH_NUL) {
 				message.setText("C'est un match nul en "+main.getPartie().getTour());
+				but1.setVisible(false);
+				but2.setVisible(false);
+				but3.setVisible(false);
+				but4.setVisible(false);
+				but5.setVisible(false);
+				but6.setVisible(false);
+				but7.setVisible(false);
 			}
-			else
-			message.setText("Le joueur gagnant est : "+main.getPartie().getJoueur2().getNom() + " en "+main.getPartie().getTour()+" tours");
+			else {
+				but1.setVisible(false);
+				but2.setVisible(false);
+				but3.setVisible(false);
+				but4.setVisible(false);
+				but5.setVisible(false);
+				but6.setVisible(false);
+				but7.setVisible(false);
+				message.setText("Le joueur gagnant est : "+main.getPartie().getJoueurCourant().getNom() + " en "+main.getPartie().getTour()+" tours");
+			}
+
 		}	
 	}
 	

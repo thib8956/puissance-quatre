@@ -90,6 +90,11 @@
                   <Font size="24.0" />
                </font>
             </Label>
+            <Button fx:id="accueil" layoutX="605.0" layoutY="544.0" mnemonicParsing="false" text="Retour à l'accueil">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
          </children>
       </Pane>
    </center>
