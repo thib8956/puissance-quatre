@@ -41,8 +41,6 @@ public class Grille {
 		return grille[colonne][ligne];
 	}
 
-
-
 	/**
 	 * Indique s'il y a encore de la place dans la colonne indiquée
 	 * @param colonne
@@ -178,44 +176,46 @@ public class Grille {
 	 */
 	public double evaluer(Case symboleJoueurCourant)
 	{
-		double eval =0;
-		for(int i=0;i<Constantes.NB_LIGNES;i++) eval +=evalLigne(symboleJoueurCourant,i);		
+		double eval = 0;
+		for(int i=0;i<Constantes.NB_LIGNES;i++) eval += evalLigne(symboleJoueurCourant,i);
 		for(int i = 0; i<Constantes.NB_COLONNES;i++) eval += evalColonne(symboleJoueurCourant,i);
 		eval += evalDiagonale(symboleJoueurCourant);
-		//System.out.println(evalDiagonale(symboleJoueurCourant));
-		System.out.println(eval);
-		return eval; 
+
+		// Evaluation de l'adversaire
+		double evalAdvers = 0;
+		Case symbAdverse = getSymboleAdverse(symboleJoueurCourant);
+		for(int i=0;i<Constantes.NB_LIGNES;i++) evalAdvers += evalLigne(symbAdverse,i);
+		for(int i = 0; i<Constantes.NB_COLONNES;i++) evalAdvers += evalColonne(symbAdverse,i);
+		evalAdvers += evalDiagonale(symbAdverse);
+		return eval - 1.3 * evalAdvers;
 	}
 
 	private double evalLigne(Case symb, int ligne) {
-		int cpt = 0;
+		int nbAlignes;
 		double result = 0;
 		int milieu = Constantes.NB_COLONNES/2;
 		Case symbAdverse = getSymboleAdverse(symb);
-		
 
-			//Si symbole adverse en milieu de ligne, impossible d'avoir des points
-			if(grille[milieu][ligne] != symb && grille[milieu][ligne] != Case.V) {
-				return result;
-			}
-			
-			for(int j = 0; j<Constantes.NB_COLONNES-3;j++) {
-				//On regarde les 3 symboles suivant lorsqu'on trouve notre symbole
-				if(grille[j][ligne] == symb) {
-					//Si il y a un symbole adverse dans les 3 symboles suivant, la chaine est null
-					if(grille[j+1][ligne] == symbAdverse || grille[j+2][ligne] == symbAdverse || grille[j+3][ligne] == symbAdverse) continue;
-					//Autrement on regarde la taille de la chaine max
-					if(grille[j+1][ligne] == symb) cpt = 2;
-					if(grille[j+2][ligne] == symb && cpt == 2) cpt = 3;
-					if(grille[j+3][ligne] == symb && cpt == 3) cpt = 4;
-					
-					
-					
-					if(cpt > result) result = cpt;
+		//Si symbole adverse en milieu de ligne, impossible d'avoir des points
+		if(grille[milieu][ligne] != symb && grille[milieu][ligne] != Case.V) {
+			return result;
+		}
+
+		for(int j = 0; j<Constantes.NB_COLONNES-3;j++) {
+			//On regarde les 3 symboles suivant lorsqu'on trouve notre symbole
+			if(grille[j][ligne] == symb) {
+				//Si il y a un symbole adverse dans les 3 symboles suivant, la chaine est null
+				if(grille[j+1][ligne] == symbAdverse
+						|| grille[j+2][ligne] == symbAdverse
+						|| grille[j+3][ligne] == symbAdverse) continue;
+				//Autrement on regarde la taille de la chaine max (nbAlignes)
+				for (nbAlignes = 0; nbAlignes < 4; ++nbAlignes) {
+					if (grille[j+1][ligne] != symb) break;
 				}
+
+				if(nbAlignes > result) result = nbAlignes;
 			}
-			
-		
+		}
 
 		return result;
 	}
@@ -253,7 +253,7 @@ public class Grille {
 	
 	private double evalDiagonalAscendante(Case symb) {
 		//on evalue uniquement les diagonales qui peuvent réaliser 4 cases consécutives
-		int cpt = 0;
+		int nbAlignes = 0;
 		double result = 0;
 		Case symbJoueurAdverse = getSymboleAdverse(symb);
 		
@@ -263,11 +263,11 @@ public class Grille {
 					if(grille[x+1][y+1] == symbJoueurAdverse || 
 							grille[x+2][y+2] == symbJoueurAdverse || 
 							grille[x+3][y+3] == symbJoueurAdverse) continue;
-					if(grille[x+1][y+1] == symb) cpt = 2;
-					if(grille[x+2][y+2] == symb && cpt == 2) cpt = 3;
-					if(grille[x+3][y+3] == symb && cpt == 3) cpt =4;
+					if(grille[x+1][y+1] == symb) nbAlignes = 2;
+					if(grille[x+2][y+2] == symb && nbAlignes == 2) nbAlignes = 3;
+					if(grille[x+3][y+3] == symb && nbAlignes == 3) nbAlignes = 400;
 				}
-				if(cpt>result) result = cpt;
+				if(nbAlignes > result) result = nbAlignes;
 			}
 		}
 
@@ -276,7 +276,7 @@ public class Grille {
 	
 	private double evalDiagonalDescendante(Case symb) {
 		//on evalue uniquement les diagonales qui peuvent réaliser 4 cases consécutives
-		int cpt = 0;
+		int nbAlignes = 0;
 		double result = 0;
 		Case symbJoueurAdverse = getSymboleAdverse(symb);
 
@@ -286,11 +286,11 @@ public class Grille {
 					if(grille[x+1][y-1] == symbJoueurAdverse ||
 							grille[x+2][y-2] == symbJoueurAdverse ||
 							grille[x+3][y-3] == symbJoueurAdverse) continue;
-					if(grille[x+1][y-1] == symb) cpt = 2;
-					if(grille[x+2][y-2] == symb && cpt == 2) cpt = 3;
-					if(grille[x+3][y-3] == symb && cpt == 3) cpt =4;
+					if(grille[x+1][y-1] == symb) nbAlignes = 2;
+					if(grille[x+2][y-2] == symb && nbAlignes == 2) nbAlignes = 3;
+					if(grille[x+3][y-3] == symb && nbAlignes == 3) nbAlignes = 400;
 				}
-				if(cpt>result) result = cpt;
+				if(nbAlignes > result) result = nbAlignes;
 			}
 		}
 
