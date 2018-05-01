@@ -1,9 +1,7 @@
 package fr.uha.ensisa.puissance4.jeu.algosIA;
 
-import fr.uha.ensisa.puissance4.data.ArbreDeJeu;
 import fr.uha.ensisa.puissance4.data.Grille;
 import fr.uha.ensisa.puissance4.data.Joueur;
-import fr.uha.ensisa.puissance4.data.Noeud;
 import fr.uha.ensisa.puissance4.util.Constantes;
 import fr.uha.ensisa.puissance4.util.Constantes.Case;
 

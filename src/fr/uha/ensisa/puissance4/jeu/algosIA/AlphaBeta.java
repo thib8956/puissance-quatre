@@ -31,7 +31,6 @@ public class AlphaBeta extends Algorithm {
 				}
 			}
 		}
-
 		return meilleureColonne;
 	}
 
