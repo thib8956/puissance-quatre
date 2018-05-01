@@ -23,7 +23,7 @@ public class Minimax extends Algorithm {
 			if (grilleDepart.isCoupPossible(i)) {
 				Grille courante = grilleDepart.clone();
 				courante.ajouterCoup(i, symboleMax);
-				double score = minScore(courante, levelIA, tourDepart);
+				double score = minScore(courante, 0, tourDepart);
 				if (score > meilleurScore) {
 					meilleurScore = score;
 					meilleureColonne = i;
@@ -40,7 +40,7 @@ public class Minimax extends Algorithm {
 	private double minScore(Grille grilleCourante, int profondeur, int tour) {
 		double scoreMin = Constantes.SCORE_MIN_NON_DEFINI;
 		// Si la grille actuelle correspond à une feuille de l'arbre de jeu, on retourne son évaluation.
-		if (profondeur == 0 || verifierPartieTerminee(grilleCourante, symboleMin, tour)) {
+		if (profondeur == levelIA || verifierPartieTerminee(grilleCourante, symboleMin, tour)) {
 			return grilleCourante.evaluer(symboleMax);
 		}
 
@@ -48,7 +48,7 @@ public class Minimax extends Algorithm {
 			if (grilleCourante.isCoupPossible(i)) {
 				Grille g = grilleCourante.clone();
 				g.ajouterCoup(i, symboleMin);
-				double score = maxScore(g, profondeur - 1, tour + 1);
+				double score = maxScore(g, profondeur + 1, tour + 1);
 				if (score < scoreMin) {
 					scoreMin = score;
 				}
@@ -64,7 +64,7 @@ public class Minimax extends Algorithm {
 	private double maxScore(Grille grilleCourante, int profondeur, int tour) {
 		double scoreMax = Constantes.SCORE_MAX_NON_DEFINI;
 		// Si la grille actuelle correspond à une feuille de l'arbre de jeu, on retourne son évaluation.
-		if (profondeur == 0 || verifierPartieTerminee(grilleCourante, symboleMax, tour)) {
+		if (profondeur == levelIA || verifierPartieTerminee(grilleCourante, symboleMax, tour)) {
 			return grilleCourante.evaluer(symboleMax);
 		}
 
@@ -72,7 +72,7 @@ public class Minimax extends Algorithm {
 			if (grilleCourante.isCoupPossible(i)) {
 				Grille g = grilleCourante.clone();
 				g.ajouterCoup(i, symboleMax);
-				double score = minScore(g, profondeur -1 , tour + 1);
+				double score = minScore(g, profondeur + 1 , tour + 1);
 				if (score > scoreMax) {
 					scoreMax = score;
 				}
@@ -80,16 +80,5 @@ public class Minimax extends Algorithm {
 		}
 
 		return scoreMax;
-	}
-
-	/**
-	 * Vérifie si la partie est terminée, soit par la vitoire d'un des deux joueurs, soit par un match nul.
-	 * @param grille grille courante
-	 * @param sym symbole du joueur courant
-	 * @param tour tour de la partie
-	 * @return true si la partie est terminée
-	 */
-	private boolean verifierPartieTerminee(Grille grille, Case sym, int tour) {
-		return grille.getEtatPartie(sym, tour) != Constantes.PARTIE_EN_COURS;
 	}
 }
