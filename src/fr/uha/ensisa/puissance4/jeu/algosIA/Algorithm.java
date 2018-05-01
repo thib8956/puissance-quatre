@@ -13,7 +13,6 @@ public abstract class Algorithm {
 	protected Grille grilleDepart;
 	protected int tourDepart;
 	protected int tourMax;
-	protected ArbreDeJeu arbre;
 	/**
 	 * Symbole adversaire
 	 */
@@ -46,7 +45,6 @@ public abstract class Algorithm {
 			symboleMax=Constantes.SYMBOLE_J2;
 			symboleMin=Constantes.SYMBOLE_J1;
 		}
-		arbre = new ArbreDeJeu(new Noeud(grilleDepart));
 	}
 
 	/**
