@@ -181,7 +181,8 @@ public class Grille {
 		double eval =0;
 		for(int i=0;i<Constantes.NB_LIGNES;i++) eval +=evalLigne(symboleJoueurCourant,i);		
 		for(int i = 0; i<Constantes.NB_COLONNES;i++) eval += evalColonne(symboleJoueurCourant,i);
-		//eval += evalDiagonale(symboleJoueurCourant);
+		eval += evalDiagonale(symboleJoueurCourant);
+		//System.out.println(evalDiagonale(symboleJoueurCourant));
 		System.out.println(eval);
 		return eval; 
 	}
@@ -231,11 +232,9 @@ public class Grille {
 	}
 
 	public double evalDiagonale(Case symb) {
-		int cpt = 0;
-		double result = 1;
-
-		
-
+		double result = 0;
+		result += evalDiagonalAscendante(symb);
+		result += evalDiagonalDescendante(symb);
 		return result;
 	}
 
