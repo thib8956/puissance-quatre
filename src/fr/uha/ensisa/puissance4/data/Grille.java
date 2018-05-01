@@ -6,7 +6,7 @@ import fr.uha.ensisa.puissance4.util.Constantes.Case;
 
 public class Grille {
 
-	private Case[][] grille;
+	private final Case[][] grille;
 
 	public Grille()
 	{
@@ -187,7 +187,7 @@ public class Grille {
 		return eval; 
 	}
 
-	public double evalLigne(Case symb, int ligne) {
+	private double evalLigne(Case symb, int ligne) {
 		int cpt = 0;
 		double result = 0;
 		int milieu = Constantes.NB_COLONNES/2;
@@ -220,7 +220,7 @@ public class Grille {
 		return result;
 	}
 
-	public double evalColonne(Case symb, int colonne) {
+	private double evalColonne(Case symb, int colonne) {
 		double cpt = 0;
 		Case symbAdverse = getSymboleAdverse(symb);
 		
@@ -231,7 +231,7 @@ public class Grille {
 		return cpt;
 	}
 
-	public double evalDiagonale(Case symb) {
+	private double evalDiagonale(Case symb) {
 		double result = 0;
 		result += evalDiagonalAscendante(symb);
 		result += evalDiagonalDescendante(symb);
@@ -243,8 +243,7 @@ public class Grille {
 	 */
 	public Grille clone()
 	{
-		Grille copy = new Grille(this);
-		return copy;
+		return new Grille(this);
 	}
 	
 	private Case getSymboleAdverse(Case symbJoueur) {
@@ -271,19 +270,30 @@ public class Grille {
 				if(cpt>result) result = cpt;
 			}
 		}
-		
-		
-		
+
 		return result;
 	}
 	
-	private double evalDiagonalDescendante(Case symbJoueur) {
+	private double evalDiagonalDescendante(Case symb) {
+		//on evalue uniquement les diagonales qui peuvent réaliser 4 cases consécutives
 		int cpt = 0;
 		double result = 0;
-		Case symbJoueurAdverse = getSymboleAdverse(symbJoueur);
-		
-		
-		
+		Case symbJoueurAdverse = getSymboleAdverse(symb);
+
+		for(int x = 0;x<4;x++) {
+			for(int y = 3; y < 6;y++) {
+				if(grille[x][y] == symb) { //Verification si la case comporte notre symbole
+					if(grille[x+1][y-1] == symbJoueurAdverse ||
+							grille[x+2][y-2] == symbJoueurAdverse ||
+							grille[x+3][y-3] == symbJoueurAdverse) continue;
+					if(grille[x+1][y-1] == symb) cpt = 2;
+					if(grille[x+2][y-2] == symb && cpt == 2) cpt = 3;
+					if(grille[x+3][y-3] == symb && cpt == 3) cpt =4;
+				}
+				if(cpt>result) result = cpt;
+			}
+		}
+
 		return result;
 	}
 	
