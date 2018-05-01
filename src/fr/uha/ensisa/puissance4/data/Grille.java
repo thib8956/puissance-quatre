@@ -10,7 +10,7 @@ public class Grille {
 
 	public Grille()
 	{
-		grille= new Case[Constantes.NB_COLONNES][Constantes.NB_LIGNES];
+		grille = new Case[Constantes.NB_COLONNES][Constantes.NB_LIGNES];
 		for(int i=0;i<Constantes.NB_COLONNES;i++)
 			for(int j=0;j<Constantes.NB_LIGNES;j++)
 			{
@@ -171,7 +171,7 @@ public class Grille {
 
 	/**
 	 * Donne un score à la grille en fonction du joueur 
-	 * @param symboleJoueurCourant
+	 * @param symboleJoueurCourant symbole du joueur courant
 	 * @return
 	 */
 	public double evaluer(Case symboleJoueurCourant)
@@ -190,11 +190,17 @@ public class Grille {
 		return eval - 1.3 * evalAdvers;
 	}
 
+	/**
+	 * Retourne pour une ligne la longueur de la plus longue chaîne d'un même pion.
+	 * @param symb pion du joueur pour lequel evaluer la grille.
+	 * @param ligne index de la ligne à évaluer
+	 * @return longueur de la plus longue chaîne d'un même pion.
+	 */
 	private double evalLigne(Case symb, int ligne) {
 		int nbAlignes;
 		double result = 0;
 		int milieu = Constantes.NB_COLONNES/2;
-		Case symbAdverse = getSymboleAdverse(symb);
+		final Case symbAdverse = getSymboleAdverse(symb);
 
 		//Si symbole adverse en milieu de ligne, impossible d'avoir des points
 		if(grille[milieu][ligne] != symb && grille[milieu][ligne] != Case.V) {
@@ -202,13 +208,13 @@ public class Grille {
 		}
 
 		for(int j = 0; j<Constantes.NB_COLONNES-3;j++) {
-			//On regarde les 3 symboles suivant lorsqu'on trouve notre symbole
+			// On regarde les 3 symboles suivants lorsqu'on trouve notre symbole
 			if(grille[j][ligne] == symb) {
-				//Si il y a un symbole adverse dans les 3 symboles suivant, la chaine est null
+				// Si il y a un symbole adverse dans les 3 symboles suivants, la chaine est nulle
 				if(grille[j+1][ligne] == symbAdverse
 						|| grille[j+2][ligne] == symbAdverse
 						|| grille[j+3][ligne] == symbAdverse) continue;
-				//Autrement on regarde la taille de la chaine max (nbAlignes)
+				// Autrement on regarde la longueur de la plus grande chaîne (nombre de pions alignés).
 				for (nbAlignes = 0; nbAlignes < 4; ++nbAlignes) {
 					if (grille[j+1][ligne] != symb) break;
 				}
@@ -220,17 +226,29 @@ public class Grille {
 		return result;
 	}
 
+	/**
+	 * Retourne pour une colonne la longueur de la plus longue chaîne d'un même pion.
+	 * @param symb pion du joueur pour lequel evaluer la grille.
+	 * @param colonne index de la colonne à évaluer
+	 * @return longueur de la plus longue chaîne.
+	 */
 	private double evalColonne(Case symb, int colonne) {
-		double cpt = 0;
+		double nbAlignes = 0;
 		Case symbAdverse = getSymboleAdverse(symb);
 		
-		for(int i = 0; i<Constantes.NB_LIGNES;i++) {
-			if(grille[colonne][i] == symb) cpt++;
-			if(grille[colonne][i] == symbAdverse) cpt = 0;
+		for(int i = 0; i < Constantes.NB_LIGNES;i++) {
+			if(grille[colonne][i] == symb) nbAlignes++;
+			// Si la colonne est bloquée par un pion adverse, l'évaluation vaut 0
+			if(grille[colonne][i] == symbAdverse) nbAlignes = 0;
 		}
-		return cpt;
+		return nbAlignes;
 	}
 
+	/**
+	 * Retourne la somme de tous les alignements de pions réalisés en diagonale pour un même joueur.
+	 * @param symb pion du joueur pour lequel évaluer la grille.
+	 * @return somme des longueurs des chaînes dans le sens diagonal ascendant (/) et descendant (\)
+	 */
 	private double evalDiagonale(Case symb) {
 		double result = 0;
 		result += evalDiagonalAscendante(symb);
@@ -245,12 +263,25 @@ public class Grille {
 	{
 		return new Grille(this);
 	}
-	
+
+	/**
+	 * Retourne le symbole correspondant au joueur adverse à partir du symbole passé en paramètre.
+	 * @param symbJoueur symbole du joueur courant.
+	 * @return symbole du joueur adverse.
+	 */
 	private Case getSymboleAdverse(Case symbJoueur) {
-		if(symbJoueur.equals(Case.O)) return Case.X;
-		else return Case.O;
+		if(symbJoueur.equals(Case.O)) {
+			return Case.X;
+		} else {
+			return Case.O;
+		}
 	}
-	
+
+	/**
+	 * Cherche la plus longue chaîne dans le sens diagonal ascendant (/)
+	 * @param symb symbole du joueur pour lequel réaliser l'évaluation
+	 * @return longueur de la chaîne
+	 */
 	private double evalDiagonalAscendante(Case symb) {
 		//on evalue uniquement les diagonales qui peuvent réaliser 4 cases consécutives
 		int nbAlignes = 0;
@@ -260,9 +291,12 @@ public class Grille {
 		for(int x = 0;x<4;x++) {
 			for(int y = 0;y<3;y++) {
 				if(grille[x][y] == symb) { //Verification si la case comporte notre symbole
+					// Si une des trois prochaines cases en diagonale comporte un pion adverse, on saute l'évaluation
+					// pour cette case car la diagonale est bloquée.
 					if(grille[x+1][y+1] == symbJoueurAdverse || 
 							grille[x+2][y+2] == symbJoueurAdverse || 
 							grille[x+3][y+3] == symbJoueurAdverse) continue;
+					// On vérifie les alignements de 2 pions du même joueur ou plus.
 					if(grille[x+1][y+1] == symb) nbAlignes = 2;
 					if(grille[x+2][y+2] == symb && nbAlignes == 2) nbAlignes = 3;
 					if(grille[x+3][y+3] == symb && nbAlignes == 3) nbAlignes = 400;
@@ -273,7 +307,12 @@ public class Grille {
 
 		return result;
 	}
-	
+
+	/**
+	 * Cherche la plus longue chaîne dans le sens diagonal descendant (\)
+	 * @param symb symbole du joueur pour lequel réaliser l'évaluation
+	 * @return longueur de la chaîne
+	 */
 	private double evalDiagonalDescendante(Case symb) {
 		//on evalue uniquement les diagonales qui peuvent réaliser 4 cases consécutives
 		int nbAlignes = 0;
@@ -282,10 +321,13 @@ public class Grille {
 
 		for(int x = 0;x<4;x++) {
 			for(int y = 3; y < 6;y++) {
-				if(grille[x][y] == symb) { //Verification si la case comporte notre symbole
+				if(grille[x][y] == symb) { // Verification si la case comporte notre symbole
+					// Si une des trois prochaines cases en diagonale comporte un pion adverse, on saute l'évaluation
+					// pour cette case car la diagonale est bloquée.
 					if(grille[x+1][y-1] == symbJoueurAdverse ||
 							grille[x+2][y-2] == symbJoueurAdverse ||
 							grille[x+3][y-3] == symbJoueurAdverse) continue;
+					// On vérifie les alignements de 2 pions du même joueur ou plus.
 					if(grille[x+1][y-1] == symb) nbAlignes = 2;
 					if(grille[x+2][y-2] == symb && nbAlignes == 2) nbAlignes = 3;
 					if(grille[x+3][y-3] == symb && nbAlignes == 3) nbAlignes = 400;

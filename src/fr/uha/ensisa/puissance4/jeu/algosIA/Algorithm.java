@@ -52,7 +52,7 @@ public abstract class Algorithm {
 	public abstract int choisirCoup();
 
 	/**
-	 * Vérifie si la partie est terminée, soit par la vitoire d'un des deux joueurs, soit par un match nul.
+	 * Vérifie si la partie est terminée, soit par la victoire d'un des deux joueurs, soit par un match nul.
 	 * @param grille grille courante
 	 * @param sym symbole du joueur courant
 	 * @param tour tour de la partie
