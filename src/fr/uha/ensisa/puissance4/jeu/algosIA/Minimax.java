@@ -79,6 +79,7 @@ public class Minimax extends Algorithm {
 				noeud = parcoursEnfants(symb,curr);
 				for(Noeud it : noeud.getChilds()) {
 					afficheGrille(it.getGrille());
+					it.getGrille().evaluer(Case.X);
 				}
 
 			}
