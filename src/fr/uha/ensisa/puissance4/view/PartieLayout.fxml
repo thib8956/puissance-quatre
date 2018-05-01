@@ -10,7 +10,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.uha.ensisa.puissance4.view.PartieViewController">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.uha.ensisa.puissance4.view.PartieViewController">
    <center>
       <Pane prefHeight="600.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <children>
@@ -90,7 +90,7 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <Button fx:id="accueil" layoutX="605.0" layoutY="544.0" mnemonicParsing="false" text="Retour à l'accueil">
+            <Button fx:id="accueil" layoutX="605.0" layoutY="544.0" mnemonicParsing="false" onAction="#retourAccueil" text="Retour à l'accueil">
                <font>
                   <Font size="18.0" />
                </font>

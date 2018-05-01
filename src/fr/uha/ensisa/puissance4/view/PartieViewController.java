@@ -1,18 +1,7 @@
 package fr.uha.ensisa.puissance4.view;
 
 
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import fr.uha.ensisa.puissance4.data.Grille;
-import fr.uha.ensisa.puissance4.data.Humain;
 import fr.uha.ensisa.puissance4.data.IA;
-import fr.uha.ensisa.puissance4.data.Joueur;
 import fr.uha.ensisa.puissance4.data.Partie;
 import fr.uha.ensisa.puissance4.jeu.Main;
 import fr.uha.ensisa.puissance4.util.Constantes;
@@ -21,18 +10,19 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 
 public class PartieViewController {
 	
 
-	List<Circle> listCircle;
+	private List<Circle> listCircle;
 
 
 	@FXML
@@ -58,11 +48,6 @@ public class PartieViewController {
 
 	@FXML
 	private GridPane grid;
-	
-
-
-
-
 
 	// Reference to the main application.
 	private Main main;
@@ -137,7 +122,7 @@ public class PartieViewController {
 		main.getPartie().jouerCoup(6, 0);
 		this.afficherGrille();
 		affichageInfo();
-		joueurSuivant();		
+		joueurSuivant();
 	}
 	
 	@FXML
@@ -146,11 +131,10 @@ public class PartieViewController {
 	}
 	
 
-
 	/**
 	 * Is called by the main application to give a reference back to itself.
 	 * 
-	 * @param mainApp
+	 * @param main
 	 */
 	public void setMainApp(Main main) {
 		this.main = main;
@@ -178,37 +162,43 @@ public class PartieViewController {
 			message.setText("L'Ia "+main.getPartie().getJoueurCourant().getNom()+" va jouer !");
 		}
 		if(main.getPartie().isPartieFinie()) {
-			if(main.getPartie().getEtatPartie() == Constantes.MATCH_NUL) {
-				message.setText("C'est un match nul en "+main.getPartie().getTour());
-				but1.setVisible(false);
-				but2.setVisible(false);
-				but3.setVisible(false);
-				but4.setVisible(false);
-				but5.setVisible(false);
-				but6.setVisible(false);
-				but7.setVisible(false);
+			String msg;
+			switch (main.getPartie().getEtatPartie()) {
+				case Constantes.VICTOIRE_JOUEUR_1 :
+					msg="VICTOIRE " + main.getPartie().getJoueur1().getNom();
+					break;
+				case Constantes.VICTOIRE_JOUEUR_2 :
+					msg="VICTOIRE " + main.getPartie().getJoueur2().getNom();
+					break;
+				default :
+					msg="MATCH NUL";
+					break;
 			}
-			else {
-				but1.setVisible(false);
-				but2.setVisible(false);
-				but3.setVisible(false);
-				but4.setVisible(false);
-				but5.setVisible(false);
-				but6.setVisible(false);
-				but7.setVisible(false);
-				message.setText("Le joueur gagnant est : "+main.getPartie().getJoueurCourant().getNom() + " en "+main.getPartie().getTour()+" tours");
-			}
+			message.setText(msg);
 
+			but1.setVisible(false);
+			but2.setVisible(false);
+			but3.setVisible(false);
+			but4.setVisible(false);
+			but5.setVisible(false);
+			but6.setVisible(false);
+			but7.setVisible(false);
+			accueil.setVisible(true);
 		}	
 	}
 	
-	public void joueurSuivant() {
-		if(main.getPartie().getJoueurCourant() instanceof IA) {
-			int coup = ((IA) main.getPartie().getJoueurCourant()).joue(main.getPartie().getGrille(), main.getPartie().getTour());
-			main.getPartie().jouerCoup(coup, 0);
+	private void joueurSuivant() {
+		final Partie partie = main.getPartie();
+		if (partie.isPartieFinie()) {
+			return;
+		}
+
+		if(partie.getJoueurCourant() instanceof IA) {
+			int coup = partie.getJoueurCourant().joue(partie.getGrille(), partie.getTour());
+			partie.jouerCoup(coup, 0);
 			afficherGrille();
 			affichageInfo();
-			if(main.getPartie().getJoueurCourant() instanceof IA && main.getPartie().getEtatPartie() == Constantes.PARTIE_EN_COURS) {
+			if(partie.getJoueurCourant() instanceof IA) {
 				joueurSuivant();
 			}
 		}
