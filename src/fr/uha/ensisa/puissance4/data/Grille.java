@@ -259,7 +259,7 @@ public class Grille {
 		double result = 0;
 		Case symbJoueurAdverse = getSymboleAdverse(symb);
 		
-		for(int x = 0;x<3;x++) {
+		for(int x = 0;x<4;x++) {
 			for(int y = 0;y<3;y++) {
 				if(grille[x][y] == symb) { //Verification si la case comporte notre symbole
 					if(grille[x+1][y+1] == symbJoueurAdverse || 
