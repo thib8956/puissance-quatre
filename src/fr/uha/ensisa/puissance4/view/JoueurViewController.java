@@ -23,7 +23,7 @@ import javafx.scene.control.TextField;
 
 
 
-public class PlayersViewController {
+public class JoueurViewController {
 	
 	Partie partie;
 
@@ -74,7 +74,7 @@ public class PlayersViewController {
 	 * The constructor.
 	 * The constructor is called before the initialize() method.
 	 */
-	public PlayersViewController() {
+	public JoueurViewController() {
 	}
 
 	/**

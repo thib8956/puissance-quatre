@@ -26,4 +26,9 @@ public class Humain extends Joueur {
 		return (console.getHumanCoup(this.getNom())-1);
 	}
 
+	@Override
+	public int joue(Grille grille, int tour) {
+		return 0;
+	}
+
 }

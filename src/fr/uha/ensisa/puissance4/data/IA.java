@@ -48,6 +48,20 @@ public class IA extends Joueur {
 		return iA.choisirCoup();
 	}
 
+	@Override
+	public int joue(Grille grille, int tour) {
+		Algorithm iA;
+		if(algoIA==Constantes.IA_MINIMAX)
+		{
+			iA = new Minimax(levelIA,grille, this, tour);
+		}
+		else
+		{
+			iA = new AlphaBeta(levelIA,grille,this, tour);
+		}
+		return iA.choisirCoup();
+	}
+
 	
 
 
