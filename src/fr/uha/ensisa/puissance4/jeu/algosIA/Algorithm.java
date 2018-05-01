@@ -13,7 +13,6 @@ public abstract class Algorithm {
 	protected Grille grilleDepart;
 	protected int tourDepart;
 	protected int tourMax;
-	protected ArbreDeJeu arbre;
 	/**
 	 * Symbole adversaire
 	 */
@@ -46,7 +45,6 @@ public abstract class Algorithm {
 			symboleMax=Constantes.SYMBOLE_J2;
 			symboleMin=Constantes.SYMBOLE_J1;
 		}
-		arbre = new ArbreDeJeu(new Noeud(grilleDepart));
 	}
 
 	/**
@@ -54,9 +52,15 @@ public abstract class Algorithm {
 	 * @return le coup choisi pour la grille indiqué lors de l'instantiation de l'algo
 	 */
 	public abstract int choisirCoup();
-	
 
-	
-	
-
+	/**
+	 * Vérifie si la partie est terminée, soit par la vitoire d'un des deux joueurs, soit par un match nul.
+	 * @param grille grille courante
+	 * @param sym symbole du joueur courant
+	 * @param tour tour de la partie
+	 * @return true si la partie est terminée
+	 */
+	boolean verifierPartieTerminee(Grille grille, Case sym, int tour) {
+		return grille.getEtatPartie(sym, tour) != Constantes.PARTIE_EN_COURS;
+	}
 }

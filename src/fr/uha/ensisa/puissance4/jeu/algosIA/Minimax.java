@@ -1,137 +1,84 @@
 package fr.uha.ensisa.puissance4.jeu.algosIA;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import fr.uha.ensisa.puissance4.data.ArbreDeJeu;
 import fr.uha.ensisa.puissance4.data.Grille;
 import fr.uha.ensisa.puissance4.data.Joueur;
-import fr.uha.ensisa.puissance4.data.Noeud;
 import fr.uha.ensisa.puissance4.util.Constantes;
 import fr.uha.ensisa.puissance4.util.Constantes.Case;
 
 
-
 public class Minimax extends Algorithm {
-	private Joueur joueur;
-
 
 
 	public Minimax(int levelIA, Grille grilleDepart, Joueur joueurActuel, int tour) {
 		super(levelIA, grilleDepart, joueurActuel, tour);
-		joueur = joueurActuel;
-		construireArbre();
-
 	}
 
 	@Override
 	public int choisirCoup() {
-		if(levelIA % 2 == 0) {
-			
-		}
-
-
-
-		return 1;
-	}
-
-	public void max(Noeud noeud){
-		double bestVal = Constantes.SCORE_MAX_NON_DEFINI;
-		for(Noeud curr : noeud.getChilds()) {
-			curr.setEval(curr.getGrille().evaluer(symboleMax));
-			if(curr.getEval() > bestVal) {
-				bestVal = curr.getEval();
-			}
-		}
-		noeud.setEval(bestVal);
-	}
-	
-	public void min(Noeud noeud) {
-		double lesVal = Constantes.SCORE_MIN_NON_DEFINI;
-		for(Noeud curr : noeud.getChilds()) {
-			curr.setEval(curr.getGrille().evaluer(symboleMin));
-			if(curr.getEval() < lesVal) {
-				lesVal = curr.getEval();
-			}
-		}
-		noeud.setEval(lesVal);
-	}
-
-
-	public void construireArbre() {
-		Case symb;
-		Noeud noeud = arbre.getRacine();
-		parcoursEnfants(joueur.getSymbole(), noeud);
-		
-		for(int profondeur = 1; profondeur<levelIA;profondeur++) {
-			for(Noeud curr : noeud.getChilds()) {
-				if (profondeur % 2 == 0) {
-					 symb = joueur.getSymbole();
+		int meilleureColonne = 0;
+		double meilleurScore = Constantes.SCORE_MAX_NON_DEFINI;
+		// Pour toutes les colonnes
+		for (int i=0; i < Constantes.NB_COLONNES; i++) {
+			// On regarde si on peut jouer dans cette colonne
+			if (grilleDepart.isCoupPossible(i)) {
+				Grille courante = grilleDepart.clone();
+				courante.ajouterCoup(i, symboleMax);
+				double score = minScore(courante, 0, tourDepart);
+				if (score > meilleurScore) {
+					meilleurScore = score;
+					meilleureColonne = i;
 				}
-				else {
-					if(joueur.getSymbole() == Constantes.SYMBOLE_J1) {
-						symb = Constantes.SYMBOLE_J2;
-					}
-					else {
-						symb = Constantes.SYMBOLE_J1;
-					}
+			}
+		}
+
+		return meilleureColonne;
+	}
+
+	/**
+	 * Tour du joueur adverse : selectionne le score le plus faible parmi les états enfants.
+	 */
+	private double minScore(Grille grilleCourante, int profondeur, int tour) {
+		double scoreMin = Constantes.SCORE_MIN_NON_DEFINI;
+		// Si la grille actuelle correspond à une feuille de l'arbre de jeu, on retourne son évaluation.
+		if (profondeur == levelIA || verifierPartieTerminee(grilleCourante, symboleMin, tour)) {
+			return grilleCourante.evaluer(symboleMin);
+		}
+
+		for (int i=0; i < Constantes.NB_COLONNES; i++) {
+			if (grilleCourante.isCoupPossible(i)) {
+				Grille g = grilleCourante.clone();
+				g.ajouterCoup(i, symboleMin);
+				double score = maxScore(g, profondeur + 1, tour + 1);
+				if (score < scoreMin) {
+					scoreMin = score;
 				}
-				noeud = parcoursEnfants(symb,curr);
-				for(Noeud it : noeud.getChilds()) {
-					afficheGrille(it.getGrille());
-					it.getGrille().evaluer(Case.X);
+			}
+		}
+
+		return scoreMin;
+	}
+
+	/**
+	 * Tour du joueur courant : selectionne le score le plus élevé parmi les états enfants.
+	 */
+	private double maxScore(Grille grilleCourante, int profondeur, int tour) {
+		double scoreMax = Constantes.SCORE_MAX_NON_DEFINI;
+		// Si la grille actuelle correspond à une feuille de l'arbre de jeu, on retourne son évaluation.
+		if (profondeur == levelIA || verifierPartieTerminee(grilleCourante, symboleMax, tour)) {
+			return grilleCourante.evaluer(symboleMax);
+		}
+
+		for (int i=0; i < Constantes.NB_COLONNES; i++) {
+			if (grilleCourante.isCoupPossible(i)) {
+				Grille g = grilleCourante.clone();
+				g.ajouterCoup(i, symboleMax);
+				double score = minScore(g, profondeur + 1 , tour + 1);
+				if (score > scoreMax) {
+					scoreMax = score;
 				}
-
 			}
-
 		}
+
+		return scoreMax;
 	}
-
-
-	private void afficheGrille(Grille grille) {
-		String s="";
-		for(int i=Constantes.NB_LIGNES-1;i>=0;i--)
-		{
-			s+="|";
-			for(int j=0;j<Constantes.NB_COLONNES;j++)
-			{
-				String symbol;
-				if(grille.getCase(i, j)==Case.V)
-					symbol=" ";
-				else
-					symbol = grille.getCase(i, j).toString();
-
-				s+=symbol+"|";
-			}
-			s+="\n";
-		}
-		s+="=";
-		for(int j=0;j<Constantes.NB_COLONNES;j++)
-		{
-			s+="==";
-		}
-		s+="\n";
-		for(int j=0;j<Constantes.NB_COLONNES;j++)
-		{
-			s+=" "+(j+1);
-		}
-		System.out.println(s);
-
-	}
-
-	private Noeud parcoursEnfants(Case symb, Noeud noeud) {
-		Grille grille;
-		for(int i=0; i<7;i++) {
-			grille = noeud.getGrille().clone();
-			if(!grille.isCoupPossible(i)) {
-				continue;
-			}
-			grille.ajouterCoup(i, symb);
-			noeud.addChild(new Noeud(grille));
-		}
-		return noeud;
-	}
-
-
-
 }
